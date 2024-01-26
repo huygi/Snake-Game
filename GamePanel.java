@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements ActionListener {
         MyKeyAdapter myKey = new MyKeyAdapter();
         Dimension dimension = new Dimension( SCREEN_WIDTH, SCREEN_HEIGHT );
         this.setPreferredSize(dimension);                                                   // Set the size for this game panel 
-        this.setBackground(Color.black);                                
+        this.setBackground(new Color(45,180,0));                                
         this.setFocusable(true);
         this.addKeyListener(myKey);
         startGame();
@@ -58,20 +58,49 @@ public class GamePanel extends JPanel implements ActionListener {
             g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);                     // This will draw all horizontal line 
             g.drawLine(0,i*UNIT_SIZE , SCREEN_WIDTH, i*UNIT_SIZE);                      // This will draw all veritical line on the main window.
         }
+
         // Draw an Apple
         g.setColor(Color.red);
-        g.drawLine(FRAMEBITS, ERROR, ALLBITS, ABORT);// Draw a circle 
+        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);                                  // Draw a circle 
+
+        // Draw a snake 
+        for( int i = 0; i < bodyParts; i++ ) {                                            // iterate thru all of the body parts of the snake 
+            if( i == 0 ) {                                                                // Snake's head
+                g.setColor(Color.blue);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {                                                                      // Snake's body 
+                g.setColor(new Color(0,0,153));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        }
     }
 
-    public void newApple() {                                              // We want to generate coordinates of a new apple. Any time we begin the game/score a point
-
+    public void newApple() {                                                       // We want to generate coordinates of a new apple. Any time we begin the game/score a point
         appleX = random.nextInt( (int) SCREEN_WIDTH/UNIT_SIZE) * UNIT_SIZE;        // This is the x-coordinate of Apple
         appleY = random.nextInt( (int) SCREEN_HEIGHT/UNIT_SIZE) * UNIT_SIZE;       // Multiply with UNIT_SIZE b/c we want this apple to be placed evenly within a square grid
     }
 
 
     public void move() {
-
+        for( int i = bodyParts; i > 0; i-- ) {                                      // Shifting the snake's body parts 
+            x[i] = x[i-1];                                                          // Shifting all the x-coordinates over by 1 spot
+            y[i] = y[i-1];
+        }
+        // Change direction of the snake where the snakes headed
+        switch( direction ) {
+            case 'U':                                                               
+                y[0] = y[0] - UNIT_SIZE;                                            // Go up, y-coordinate of the head of our snake
+                break;
+            case 'D':
+                y[0] = y[0] + UNIT_SIZE;
+                break;
+            case 'L': 
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+        }
     }
 
     public void checkApple() {
@@ -79,6 +108,10 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkCollisions() { 
+    
+        // for( int i = bodyParts; i > 0; i-- ) {                      // Check if the head snake collies with its body,Iterate thru the snake body's part       
+        //     if( (x[0] == x[i]) && (y[0] == y[i]) )
+        // }                     
 
     }
 
@@ -88,8 +121,13 @@ public class GamePanel extends JPanel implements ActionListener {
     
     
     @Override
-    public void actionPerformed( ActionEvent e ) {
-
+    public void actionPerformed( ActionEvent e ) {                  // This method to run the snake game
+        if( running ) {
+            move();
+            checkApple();
+            checkCollisions();
+        }
+        repaint();                                                  // If this game is no longer running 
     }
 
     public class MyKeyAdapter extends KeyAdapter{                   // Inner class
