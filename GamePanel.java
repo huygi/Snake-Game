@@ -1,6 +1,8 @@
 import java.awt.*;
 import javax.swing.JPanel;
 import java.awt.event.*;
+import java.awt.image.CropImageFilter;
+
 import javax.swing.*;
 import java.util.Random;
 
@@ -53,25 +55,42 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw( Graphics g ) {                                
-        // Draw a grid for better visualize, all of the items will equal to a square of grid
-        for( int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++ ) {
-            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);                     // This will draw all horizontal line 
-            g.drawLine(0,i*UNIT_SIZE , SCREEN_WIDTH, i*UNIT_SIZE);                      // This will draw all veritical line on the main window.
-        }
-
-        // Draw an Apple
-        g.setColor(Color.red);
-        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);                                  // Draw a circle 
-
-        // Draw a snake 
-        for( int i = 0; i < bodyParts; i++ ) {                                            // iterate thru all of the body parts of the snake 
-            if( i == 0 ) {                                                                // Snake's head
-                g.setColor(Color.blue);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-            } else {                                                                      // Snake's body 
-                g.setColor(new Color(0,0,153));
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+        if( running ) {
+            // Draw a grid for better visualize, all of the items will equal to a square of grid
+            for( int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++ ) {
+                g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);                     // This will draw all horizontal line 
+                g.drawLine(0,i*UNIT_SIZE , SCREEN_WIDTH, i*UNIT_SIZE);                      // This will draw all veritical line on the main window.
             }
+
+            // Draw an Apple
+            g.setColor(Color.red);
+            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);                                  // Draw a circle 
+
+            // Draw a snake 
+            for( int i = 0; i < bodyParts; i++ ) {                                            // iterate thru all of the body parts of the snake 
+                if( i == 0 ) {                                                                // Snake's head
+                    g.setColor(Color.blue);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.setColor(Color.black);
+                    g.fillOval(x[i], y[i], UNIT_SIZE/2, UNIT_SIZE/2);                         // Snake's eye
+                    g.setColor(Color.white);
+                    g.fillOval(x[i], y[i], UNIT_SIZE/5, UNIT_SIZE/5);
+                    g.setColor(Color.orange);
+                    g.fillOval(x[i]+UNIT_SIZE/2, y[i]+UNIT_SIZE/2, UNIT_SIZE/2, UNIT_SIZE/2);
+                    
+                } else {                                                                      // Snake's body 
+                    // g.setColor(new Color(0,0,153));
+                    g.setColor( new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)) );
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+            }
+            g.setColor( Color.black ); 
+            g.setFont( new Font("Ink Free",Font.BOLD, 35 ));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten))/2, g.getFont().getSize());
+
+        } else {
+            gameOver(g);
         }
     }
 
@@ -104,19 +123,55 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkApple() {
-
+        if( (x[0] == appleX) && (y[0] == appleY) ) {
+            bodyParts++;
+            applesEaten++;
+            newApple();
+        }
     }
 
     public void checkCollisions() { 
-    
-        // for( int i = bodyParts; i > 0; i-- ) {                      // Check if the head snake collies with its body,Iterate thru the snake body's part       
-        //     if( (x[0] == x[i]) && (y[0] == y[i]) )
-        // }                     
-
+    // Checks if the snake's head collies with its body,Iterate thru the snake body's part
+        for( int i = bodyParts; i > 0; i-- ) {                             
+            if( (x[0] == x[i]) && (y[0] == y[i]) ) {
+                running = false;                                    // Game Over 
+            }
+        }                                                             
+    // Checks if snake's head hit the left-borders of the frame 
+        if( x[0] < 0 ) {
+            running = false;
+        }
+    // Checks if head hit the right-borders 
+        if( x[0] > SCREEN_WIDTH) {
+            running = false;
+        }
+    // Checks if head hit the top-borders 
+        if( y[0] < 0 ) {
+            running = false;
+        }
+    // Checks if head hit the bottom of the frame 
+        if( y[0] > SCREEN_HEIGHT ) {
+            running = false;
+        } 
+        if( !running ) {
+            timer.stop();
+        }
     }
 
-    public void gameOver( Graphics g ) {
 
+
+    public void gameOver( Graphics g ) {
+        // Display score on the frame
+        g.setColor( Color.red ); 
+        g.setFont( new Font("Ink Free",Font.BOLD, 35 ));
+        FontMetrics metrics1 = getFontMetrics(g.getFont());
+        g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: " + applesEaten))/2, g.getFont().getSize());
+        // Game Over text 
+        g.setColor( Color.red ); 
+        g.setFont( new Font("Ink Free",Font.BOLD, 75 ));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);                // Game Over text in the center of the frame
+        this.setBackground(Color.black);
     }
     
     
@@ -133,7 +188,28 @@ public class GamePanel extends JPanel implements ActionListener {
     public class MyKeyAdapter extends KeyAdapter{                   // Inner class
         @Override
         public void keyPressed( KeyEvent e ) {
-
+            switch( e.getKeyCode() ) {
+                case KeyEvent.VK_LEFT:
+                    if( direction != 'R' ) {
+                        direction = 'L';
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if( direction != 'L' ) {
+                        direction = 'R';
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if( direction != 'D' ) {
+                        direction = 'U';
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if( direction != 'U' ) {
+                        direction = 'D';
+                    }
+                    break;
+            }
         }
     }
 }
