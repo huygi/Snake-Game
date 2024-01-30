@@ -43,6 +43,37 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(myKey);
         startGame();
+
+        addKeyListener(GamePanel.keyListener);
+        addMouseListener(GamePanel.mouseListener);
+        addMouseMotionListener(GamePanel.mouseListener);
+        GamePanel.changeState(0);
+
+    }
+
+    public static void changeState( int newState ) {
+        GamePanel.currentState = newState;
+        switch( GamePanel.currentState ) {
+            case 0:
+            GamePanel.currentScene = new MenuScene(keyListener, mouseListener);
+                break;
+            case 1:
+            GamePanel.currentScene = new GameScene();
+                break;
+            default:
+                System.out.println("Unknown scene.");
+                GamePanel.currentScene = null;
+                break;
+        }      
+    }
+
+    public void update(double dt) {
+        Image dbImage = createImage(getWidth(), getHeight());
+        Graphics dbg = dbImage.getGraphics();
+        this.draw(dbg);
+        getGraphics().drawImage(dbImage, 0, 0, this);
+  
+        currentScene.update(dt);
     }
 
     public void startGame() {
@@ -95,6 +126,9 @@ public class GamePanel extends JPanel implements ActionListener {
         } else {
             gameOver(g);
         }
+
+        currentScene.draw(g);
+
     }
 
     public void newApple() {                                                       // We want to generate coordinates of a new apple. Any time we begin the game/score a point
