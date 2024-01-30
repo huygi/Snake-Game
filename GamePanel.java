@@ -1,5 +1,4 @@
 import java.awt.*;
-import javax.swing.JPanel;
 import java.awt.event.*;
 import java.awt.image.CropImageFilter;
 
@@ -10,8 +9,8 @@ import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
     
-    private static final int SCREEN_WIDTH = 600;
-    private static final int SCREEN_HEIGHT = 600;
+    static final int SCREEN_WIDTH = 800;
+    static final int SCREEN_HEIGHT = 600;
     private static final int UNIT_SIZE = 25;                                                // How big do we want the objects(each item) in this game             
     private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT ) / UNIT_SIZE;      // We want to calculate how many objects we can actually fit on the screen 
     private static final int DELAY = 75;                                                    // Delay for our timer. The higher the number the delay, the slower the game is                                                  
@@ -29,7 +28,12 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random random;
 
-    
+    public static int currentState;
+    public static Scene currentScene;
+ 
+    public static KL keyListener = new KL();
+    public static MousListener mouseListener = new MousListener();
+
     public GamePanel() {     
         random = new Random();
         MyKeyAdapter myKey = new MyKeyAdapter();
@@ -39,9 +43,8 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(myKey);
         startGame();
-
     }
-    
+
     public void startGame() {
         newApple();
         running = true;
