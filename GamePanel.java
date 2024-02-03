@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.CropImageFilter;
 
 import javax.swing.*;
 import java.util.Random;
@@ -9,7 +8,7 @@ import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
     
-    static final int SCREEN_WIDTH = 800;
+    static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     private static final int UNIT_SIZE = 25;                                                // How big do we want the objects(each item) in this game             
     private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT ) / UNIT_SIZE;      // We want to calculate how many objects we can actually fit on the screen 
@@ -18,9 +17,9 @@ public class GamePanel extends JPanel implements ActionListener {
     private final int x[] = new int[GAME_UNITS];                                            // These arrays are going to hold all of the coordinates for all the body parts of the snake 
     private final int y[] = new int[GAME_UNITS];                                            // Set the size to whatever the game units is. Since the snake isn't going to be bigger than the game itself
 
-    private int bodyParts = 6;                                                              // Begin game with 6 body parts on the snake
+    private int bodyParts = 1;                                                              // Begin game with 6 body parts on the snake
     private int applesEaten;
-    private int appleX;                                                                     // X-coordinate of where the Apple is located, it's going to appear randomly each time 
+    private int appleX;                                                                      // X-coordinate of where the Apple is located, it's going to appear randomly each time 
     private int appleY;
     private char direction = 'R';                                                           // Snake's begin going right when start the game
     private boolean running = false;                                                        // Snake doesn't run before starting the game

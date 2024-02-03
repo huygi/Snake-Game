@@ -32,9 +32,9 @@ public class MenuScene extends Scene {
         playCurrentImage = play;
         exitCurrentImage = exit;
 
-        titleRect = new Rectangle(240, 40, 300, 100);
-        playRect = new Rectangle(310, 280, 150, 70);
-        exitRect = new Rectangle(318, 355, 130, 55);
+        titleRect = new Rectangle(142, 40, 300, 100);
+        playRect = new Rectangle(220, 280, 150, 70);
+        exitRect = new Rectangle(228, 355, 130, 55);
 
     }
 
@@ -62,8 +62,8 @@ public class MenuScene extends Scene {
 
     @Override
     public void draw(Graphics g) {
-      g.setColor( Color.WHITE);
-      g.fillRect(0, 0, 800, 600);
+      g.setColor( new Color( 255,102,102));
+      g.fillRect(0, 0, 600, 600);
 
       g.drawImage(title, (int) titleRect.x, (int) titleRect.y, (int) titleRect.width, (int) titleRect.height, null);
       g.drawImage(playCurrentImage, (int) playRect.x, (int) playRect.y, (int) playRect.width, (int) playRect.height, null);
