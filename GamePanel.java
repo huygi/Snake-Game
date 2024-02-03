@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements ActionListener {
             GamePanel.currentScene = new MenuScene(keyListener, mouseListener);
                 break;
             case 1:
-            GamePanel.currentScene = new GameScene();
+            // GamePanel.currentScene = new GamePanel();
                 break;
             default:
                 System.out.println("Unknown scene.");
