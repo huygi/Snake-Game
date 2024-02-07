@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final int x[] = new int[GAME_UNITS];                                            // These arrays are going to hold all of the coordinates for all the body parts of the snake 
     private final int y[] = new int[GAME_UNITS];                                            // Set the size to whatever the game units is. Since the snake isn't going to be bigger than the game itself
 
-    private int bodyParts = 1;                                                              // Begin game with 6 body parts on the snake
+    private int bodyParts = 3;                                                              // Begin game with 6 body parts on the snake
     private int applesEaten;
     private int appleX;                                                                      // X-coordinate of where the Apple is located, it's going to appear randomly each time 
     private int appleY;
@@ -43,37 +43,37 @@ public class GamePanel extends JPanel implements ActionListener {
         this.addKeyListener(myKey);
         startGame();
 
-        addKeyListener(GamePanel.keyListener);
-        addMouseListener(GamePanel.mouseListener);
-        addMouseMotionListener(GamePanel.mouseListener);
-        GamePanel.changeState(0);
+        // addKeyListener(GamePanel.keyListener);
+        // addMouseListener(GamePanel.mouseListener);
+        // addMouseMotionListener(GamePanel.mouseListener);
+        // GamePanel.changeState(0);
 
     }
 
-    public static void changeState( int newState ) {
-        GamePanel.currentState = newState;
-        switch( GamePanel.currentState ) {
-            case 0:
-            GamePanel.currentScene = new MenuScene(keyListener, mouseListener);
-                break;
-            case 1:
-            // GamePanel.currentScene = new GamePanel();
-                break;
-            default:
-                System.out.println("Unknown scene.");
-                GamePanel.currentScene = null;
-                break;
-        }      
-    }
+    // public static void changeState( int newState ) {
+    //     GamePanel.currentState = newState;
+    //     switch( GamePanel.currentState ) {
+    //         case 0:
+    //         GamePanel.currentScene = new MenuScene(keyListener, mouseListener);
+    //             break;
+    //         case 1:
+    //         // GamePanel.currentScene = new GamePanel();
+    //             break;
+    //         default:
+    //             System.out.println("Unknown scene.");
+    //             GamePanel.currentScene = null;
+    //             break;
+    //     }      
+    // }
 
-    public void update(double dt) {
-        Image dbImage = createImage(getWidth(), getHeight());
-        Graphics dbg = dbImage.getGraphics();
-        this.draw(dbg);
-        getGraphics().drawImage(dbImage, 0, 0, this);
+    // public void update(double dt) {
+    //     Image dbImage = createImage(getWidth(), getHeight());
+    //     Graphics dbg = dbImage.getGraphics();
+    //     this.draw(dbg);
+    //     getGraphics().drawImage(dbImage, 0, 0, this);
   
-        currentScene.update(dt);
-    }
+    //     currentScene.update(dt);
+    // }
 
     public void startGame() {
         newApple();
@@ -90,10 +90,10 @@ public class GamePanel extends JPanel implements ActionListener {
     public void draw( Graphics g ) {                                
         if( running ) {
             // Draw a grid for better visualize, all of the items will equal to a square of grid
-            for( int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++ ) {
-                g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);                     // This will draw all horizontal line 
-                g.drawLine(0,i*UNIT_SIZE , SCREEN_WIDTH, i*UNIT_SIZE);                      // This will draw all veritical line on the main window.
-            }
+            // for( int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++ ) {
+            //     g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);                     // This will draw all horizontal line 
+            //     g.drawLine(0,i*UNIT_SIZE , SCREEN_WIDTH, i*UNIT_SIZE);                      // This will draw all veritical line on the main window.
+            // }
 
             // Draw an Apple
             g.setColor(Color.red);
@@ -126,7 +126,7 @@ public class GamePanel extends JPanel implements ActionListener {
             gameOver(g);
         }
 
-        currentScene.draw(g);
+        // currentScene.draw(g);
 
     }
 
